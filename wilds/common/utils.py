@@ -74,18 +74,35 @@ def get_counts(g, n_groups):
 
 def avg_over_groups(v, g, n_groups):
     """
-    Args:
-        v (Tensor): Vector containing the quantity to average over.
-        g (Tensor): Vector of the same length as v, containing group information.
+    v: Tensor of shape (N,) - element-wise metric values
+    g: LongTensor of shape (N,) - group indices in [0, n_groups-1]
+    n_groups: int
     Returns:
-        group_avgs (Tensor): Vector of length num_groups
-        group_counts (Tensor)
+      group_avgs: Tensor (n_groups,)
+      group_counts: Tensor (n_groups,)
     """
-    import torch_scatter
-    assert v.device==g.device
-    assert v.numel()==g.numel()
-    group_count = get_counts(g, n_groups)
-    group_avgs = torch_scatter.scatter(src=v, index=g, dim_size=n_groups, reduce='mean')
+    import torch
+
+    # Ensure correct dtypes
+    if g.dtype != torch.long:
+        g = g.long()
+
+    # Try torch_scatter first (fast), otherwise fall back to pure PyTorch
+    try:
+        import torch_scatter  # type: ignore
+        group_sum = torch_scatter.scatter(src=v, index=g, dim=0, dim_size=n_groups, reduce='sum')
+        group_count = torch_scatter.scatter(
+            src=torch.ones_like(v, dtype=v.dtype),
+            index=g, dim=0, dim_size=n_groups, reduce='sum'
+        )
+    except Exception:
+        group_sum = torch.zeros(n_groups, device=v.device, dtype=v.dtype)
+        group_count = torch.zeros(n_groups, device=v.device, dtype=v.dtype)
+
+        group_sum.index_add_(0, g, v)
+        group_count.index_add_(0, g, torch.ones_like(v, dtype=v.dtype))
+
+    group_avgs = group_sum / torch.clamp(group_count, min=1.0)
     return group_avgs, group_count
 
 def map_to_id_array(df, ordered_map={}):

@@ -83,7 +83,11 @@ def save_model(algorithm, epoch, best_val_metric, path):
     state = {}
     state['algorithm'] = algorithm.state_dict()
     state['epoch'] = epoch
-    state['best_val_metric'] = best_val_metric
+    state['best val metric'] = best_val_metric
+
+    path = path.replace(':', '_')
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+
     torch.save(state, path)
 
 def load(module, path, device=None, tries=2):
@@ -282,11 +286,15 @@ def initialize_wandb(config):
     wandb.config.update(config)
 
 def save_pred(y_pred, path_prefix):
+    # Windows-friendly path + ensure folder exists
+    path_prefix = path_prefix.replace(':', '_')
+    os.makedirs(os.path.dirname(path_prefix), exist_ok=True)
+
     # Single tensor
     if torch.is_tensor(y_pred):
         df = pd.DataFrame(y_pred.numpy())
         df.to_csv(path_prefix + '.csv', index=False, header=False)
-    # Dictionary
+    # Dictionary / list
     elif isinstance(y_pred, dict) or isinstance(y_pred, list):
         torch.save(y_pred, path_prefix + '.pth')
     else:

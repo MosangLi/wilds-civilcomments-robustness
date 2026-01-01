@@ -1,0 +1,154 @@
+Dataset: civilcomments
+Algorithm: ERM
+Root dir: data
+Split scheme: official
+Dataset kwargs: {}
+Download: True
+Frac: 0.002
+Version: None
+Unlabeled split: None
+Unlabeled version: None
+Use unlabeled y: False
+Loader kwargs: {'num_workers': 0, 'pin_memory': False}
+Unlabeled loader kwargs: {'num_workers': 0, 'pin_memory': False}
+Train loader: standard
+Uniform over groups: False
+Distinct groups: None
+N groups per batch: 1
+Unlabeled n groups per batch: 1
+Batch size: 8
+Unlabeled batch size: 16
+Eval loader: standard
+Gradient accumulation steps: 1
+Model: distilbert-base-uncased
+Model kwargs: {}
+Noisystudent add dropout: None
+Noisystudent dropout rate: None
+Pretrained model path: None
+Load featurizer only: False
+Teacher model path: None
+Transform: bert
+Additional train transform: None
+Target resolution: None
+Resize scale: None
+Max token length: 300
+Randaugment n: 2
+Loss function: cross_entropy
+Loss kwargs: {}
+Groupby fields: ['black', 'y']
+Group dro step size: None
+Coral penalty weight: 10.0
+Dann penalty weight: 1.0
+Dann classifier lr: 1e-05
+Dann featurizer lr: 1e-06
+Dann discriminator lr: 1e-05
+Afn penalty weight: None
+Safn delta r: None
+Hafn r: None
+Use hafn: False
+Irm lambda: 1.0
+Irm penalty anneal iters: None
+Self training lambda: None
+Self training threshold: None
+Pseudolabel t2: None
+Soft pseudolabels: False
+Algo log metric: accuracy
+Process pseudolabels function: pseudolabel_multiclass_logits
+Val metric: acc_wg
+Val metric decreasing: False
+N epochs: 1
+Optimizer: AdamW
+Lr: 1e-05
+Weight decay: 0.01
+Max grad norm: 1.0
+Optimizer kwargs: {}
+Scheduler: linear_schedule_with_warmup
+Scheduler kwargs: {'num_warmup_steps': 0}
+Scheduler metric split: val
+Scheduler metric name: None
+Process outputs function: multiclass_logits_to_pred
+Evaluate all splits: True
+Eval splits: []
+Eval only: False
+Eval epoch: None
+Device: cpu
+Seed: 0
+Log dir: .\logs_win
+Log every: 50
+Save step: None
+Save best: True
+Save last: True
+Save pred: True
+No group logging: False
+Progress bar: True
+Resume: False
+Use wandb: False
+Wandb api key path: None
+Wandb kwargs: {}
+Use data parallel: False
+
+Train data...
+    y = 0, black = 0: n = 474
+    y = 0, black = 1: n = 10
+    y = 1, black = 0: n = 50
+    y = 1, black = 1: n = 4
+Validation data...
+    y = 0, black = 0: n = 74
+    y = 0, black = 1: n = 4
+    y = 1, black = 0: n = 11
+    y = 1, black = 1: n = 1
+Test data...
+    y = 0, black = 0: n = 232
+    y = 0, black = 1: n = 4
+    y = 1, black = 0: n = 27
+    y = 1, black = 1: n = 5
+
+Epoch [0]:
+
+Train:
+objective: 0.455
+loss_avg: 0.455
+acc_avg: 0.850
+  y = 0, black = 0  [n =    347]:	loss: 0.342	acc: 0.957	
+  y = 0, black = 1  [n =      7]:	loss: 0.361	acc: 0.857	
+  y = 1, black = 0  [n =     42]:	loss: 1.316	acc: 0.048	
+  y = 1, black = 1  [n =      4]:	loss: 1.373	acc: 0.000	
+objective: 0.249
+loss_avg: 0.249
+acc_avg: 0.942
+  y = 0, black = 0  [n =    127]:	loss: 0.130	acc: 1.000	
+  y = 0, black = 1  [n =      3]:	loss: 0.114	acc: 1.000	
+  y = 1, black = 0  [n =      8]:	loss: 2.188	acc: 0.000	
+Epoch eval:
+Average acc: 0.874
+  male                   acc on non_toxic: 1.000 (n =     65)    acc on toxic: 0.000 (n =      5) 
+  female                 acc on non_toxic: 1.000 (n =     66)    acc on toxic: 0.000 (n =     13) 
+  LGBTQ                  acc on non_toxic: 1.000 (n =     11)    acc on toxic: 0.000 (n =      6) 
+  christian              acc on non_toxic: 1.000 (n =     64)    acc on toxic: 0.000 (n =      6) 
+  muslim                 acc on non_toxic: 0.958 (n =     24)    acc on toxic: 0.000 (n =      7) 
+  other_religions        acc on non_toxic: 1.000 (n =      8)    acc on toxic: 0.250 (n =      4) 
+  black                  acc on non_toxic: 0.900 (n =     10)    acc on toxic: 0.000 (n =      4) 
+  white                  acc on non_toxic: 0.964 (n =     28)    acc on toxic: 0.000 (n =     10) 
+Worst-group acc: 0.000
+
+Validation:
+objective: 0.400
+loss_avg: 0.400
+acc_avg: 0.867
+  y = 0, black = 0  [n =     74]:	loss: 0.123	acc: 1.000	
+  y = 0, black = 1  [n =      4]:	loss: 0.108	acc: 1.000	
+  y = 1, black = 0  [n =     11]:	loss: 2.196	acc: 0.000	
+  y = 1, black = 1  [n =      1]:	loss: 2.340	acc: 0.000	
+Epoch eval:
+Average acc: 0.867
+  male                   acc on non_toxic: 1.000 (n =     10)    acc on toxic: 0.000 (n =      0) 
+  female                 acc on non_toxic: 1.000 (n =      9)    acc on toxic: 0.000 (n =      5) 
+  LGBTQ                  acc on non_toxic: 0.000 (n =      0)    acc on toxic: 0.000 (n =      1) 
+  christian              acc on non_toxic: 1.000 (n =     10)    acc on toxic: 0.000 (n =      1) 
+  muslim                 acc on non_toxic: 1.000 (n =      6)    acc on toxic: 0.000 (n =      2) 
+  other_religions        acc on non_toxic: 0.000 (n =      0)    acc on toxic: 0.000 (n =      0) 
+  black                  acc on non_toxic: 1.000 (n =      4)    acc on toxic: 0.000 (n =      1) 
+  white                  acc on non_toxic: 1.000 (n =      5)    acc on toxic: 0.000 (n =      2) 
+Worst-group acc: 0.000
+Validation acc_wg: 0.000
+Epoch 0 has the best validation performance so far.
