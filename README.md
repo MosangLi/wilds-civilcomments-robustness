@@ -1,3 +1,30 @@
+# WILDS CivilComments Robustness — ERM vs GroupDRO (My Experiments)
+
+This repo contains my experiments on **WILDS CivilComments** to compare **ERM** vs **GroupDRO** under different training fractions (focus: **frac=0.2**).
+
+> Note: This repository is based on the upstream WILDS codebase. My changes are mainly under `examples/` and `wilds/`.
+
+## Experiment setup (my runs)
+- Dataset: `civilcomments` (WILDS official split)
+- Model: `distilbert-base-uncased`
+- Algorithms: ERM, GroupDRO
+- Group definition (for GroupDRO objective): `groupby_fields = ['black', 'y']`
+- Training: `n_epochs=1`, `batch_size=8`, `lr=2e-5`, device=CPU, seed=0
+- Training fraction: `--frac 0.2`
+
+(These settings follow my experiment record.) 
+
+## Reproducibility (commands)
+ERM @ frac=0.2 (example):
+```bash
+python examples/run_expt.py --dataset civilcomments --algorithm ERM --root_dir data --download \
+  --n_epochs 1 --batch_size 8 --lr 2e-5 --progress_bar \
+  --loader_kwargs num_workers=0 pin_memory=False \
+  --unlabeled_loader_kwargs num_workers=0 pin_memory=False \
+  --save_last False --save_best False --save_pred False \
+  --frac 0.2
+
+
 <p align='center'>
   <img width='40%' src='https://wilds.stanford.edu/WILDS_cropped.png' />
 </p>
